@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Memoq-for-edt
+Bundle-SymbolicName: org.memoq-for-edt;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.memoq_for_edt.internal.Activator
+Bundle-Vendor: 1C: Romania
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ com._1c.g5.v8.dt.metadata,
+ org.eclipse.emf.ecore;bundle-version="2.26.0",
+ com._1c.g5.v8.dt.navigator.ui;bundle-version="11.1.100"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: org.memoq.for.edt
+Bundle-ActivationPolicy: lazy
+Import-Package: com._1c.g5.v8.bm.core;version="7.7.100",
+ com._1c.g5.v8.bm.integration;version="10.0.100",
+ com._1c.g5.v8.dt.core.platform;version="10.7.0",
+ com._1c.g5.wiring;version="2.2.0",
+ com._1c.g5.wiring.binder;version="1.1.0",
+ com.google.inject
