@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Memoq-for-edt
 Bundle-SymbolicName: org.memoq-for-edt;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.memoq_for_edt.internal.Activator
 Bundle-Vendor: 1C: Romania
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -19,4 +18,6 @@ Import-Package: com._1c.g5.v8.bm.core;version="7.7.100",
  com._1c.g5.v8.dt.core.platform;version="10.7.0",
  com._1c.g5.wiring;version="2.2.0",
  com._1c.g5.wiring.binder;version="1.1.0",
- com.google.inject
+ com.google.inject,
+ org.apache.commons.io;version="2.8.0",
+ org.apache.commons.lang3;version="3.3.0"

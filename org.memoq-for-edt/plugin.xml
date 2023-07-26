@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="org.memoq_for_edt.internal.PluginExecutableExtensionFactory:org.memoq_for_edt.internal.UnloadSourceLangDictionaries"
+            defaultHandler="org.memoq_for_edt.internal.UnloadSourceLangDictionaries"
             id="org.memoq-for-edt.unload-source-lang-dictionaries"
             name="Unload source language dictionaries">
       </command>

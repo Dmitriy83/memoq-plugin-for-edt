@@ -1,92 +1,105 @@
 package org.memoq_for_edt.internal;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com._1c.g5.v8.bm.core.IBmTransaction;
-import com._1c.g5.v8.bm.integration.AbstractBmTask;
-import com._1c.g5.v8.bm.integration.IBmModel;
-import com._1c.g5.v8.dt.core.platform.IBmModelManager;
-import com._1c.g5.v8.dt.core.platform.IConfigurationProvider;
-import com._1c.g5.v8.dt.metadata.mdclass.Configuration;
-import com.google.inject.Inject;
-
-public class UnloadSourceLangDictionaries
-    extends AbstractHandler
+public class UnloadSourceLangDictionaries extends AbstractHandler
 {
-    private static final String FIRST_VERSION = "1.0.1.0";
 
-    @Inject
-    private IConfigurationProvider configurationProvider;
-
-    @Inject
-    private IBmModelManager bmModelManager;
+    private final String CONTEXT_DICTIONARY_EXTENSION = Messages.ContextDictionaryExtension;
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
+        try
+        {
+            UnloadDictionaries(event);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void UnloadDictionaries(ExecutionEvent event) throws IOException
+    {
         IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
         if (selection.isEmpty()) {
-            return null;
+            return;
         }
 
         Object project = selection.getFirstElement();
         if (!(project instanceof IProject))
         {
-            return null;
+            return;
         }
 
-        Configuration configuration = configurationProvider.getConfiguration((IProject)project);
-        String version = configuration.getVersion();
-        if (version == null || version.isEmpty())
+        IProject adapter = ((IProject)project).getAdapter(IProject.class);
+        IPath projectLocation = adapter.getLocation();
+
+	Path srcSourceDirectory = Path.of(projectLocation.append(Messages.src_source).toOSString());
+        if (!Files.exists(srcSourceDirectory))
         {
-            version = FIRST_VERSION;
+            return;
         }
 
-        String[] serments = version.split("\\.");
-        if (serments.length <= 1)
+	String srcTargetDirectoryStr = projectLocation.append(Messages.src_target).toOSString();
+	Path srcTargetDirectory = Path.of(srcTargetDirectoryStr);
+        if (Files.exists(srcTargetDirectory))
         {
-            return null;
+	    FileUtils.deleteDirectory(new File(srcTargetDirectoryStr));
         }
 
-        String lastSegment = serments[serments.length - 1];
-        int qualiffier;
-        try
-        {
-            qualiffier = Integer.parseInt(lastSegment);
-        }
-        catch (Exception e)
-        {
-            qualiffier = 0;
-        }
+        copyFolder(srcSourceDirectory, srcTargetDirectory, StandardCopyOption.REPLACE_EXISTING);
 
-        qualiffier++;
-        serments[serments.length - 1] = String.valueOf(qualiffier);
-        final String newVersion = String.join(".", serments);
+        // Open file explorer
+	File file = new File(srcTargetDirectoryStr);
+        Desktop desktop = Desktop.getDesktop();
+        desktop.open(file);
+    }
 
-        IBmModel model = bmModelManager.getModel((IProject)project);
-        if (model == null)
-        {
-            return null;
-        }
-
-        model.getGlobalContext().execute(new AbstractBmTask<Void>("Unload source language dictionaries")
+    public void copyFolder(Path source, Path target, CopyOption options) throws IOException
+    {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>()
         {
             @Override
-            public Void execute(IBmTransaction transaction, IProgressMonitor monitor)
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
             {
-                Configuration editing = transaction.toTransactionObject(configuration);
-                editing.setVersion(newVersion);
+                Files.createDirectories(target.resolve(source.relativize(dir).toString()));
+                return FileVisitResult.CONTINUE;
+            }
 
-                return null;
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+            {
+                if (CONTEXT_DICTIONARY_EXTENSION.equals(FilenameUtils.getExtension(file.toString())))
+                {
+		    Files.move(file, target.resolve(source.relativize(file).toString().replace(
+				    "_en.".concat(CONTEXT_DICTIONARY_EXTENSION),
+				    "_ro.".concat(CONTEXT_DICTIONARY_EXTENSION))),
+			    options);
+                }
+                return FileVisitResult.CONTINUE;
             }
         });
-
-        return null;
     }
 }
