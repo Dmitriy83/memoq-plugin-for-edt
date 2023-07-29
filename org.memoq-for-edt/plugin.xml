@@ -6,7 +6,7 @@
       <command
             defaultHandler="org.memoq_for_edt.internal.UnloadSourceLangDictionaries"
             id="org.memoq-for-edt.unload-source-lang-dictionaries"
-            name="Unload source language dictionaries">
+            name="Extract source language files from the main project">
       </command>
    </extension>
    <extension

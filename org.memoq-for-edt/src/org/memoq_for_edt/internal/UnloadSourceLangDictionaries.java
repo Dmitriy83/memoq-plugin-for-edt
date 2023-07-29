@@ -101,16 +101,16 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
             {
                 if (CONTEXT_DICTIONARY_EXTENSION.equals(FilenameUtils.getExtension(file.toString())))
                 {
+                    fixKeys(file);
                     Files.move(file, target.resolve(source.relativize(file).toString()
                             .replace(Messages.filterSourceLanguage.concat(CONTEXT_DICTIONARY_EXTENSION),
                                 Messages.filterTargetLanguage.concat(CONTEXT_DICTIONARY_EXTENSION))),
                         options);
-                    FixKeys(file);
                 }
                 return FileVisitResult.CONTINUE;
             }
 
-            private void FixKeys(Path file) throws IOException
+            private void fixKeys(Path file) throws IOException
             {
                 List<String> fileContent = new ArrayList<>(Files.readAllLines(file, StandardCharsets.UTF_8));
                 String lineText;
