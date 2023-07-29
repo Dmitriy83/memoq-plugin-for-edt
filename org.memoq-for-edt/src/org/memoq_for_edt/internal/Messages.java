@@ -12,6 +12,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = Messages.class.getPackageName() + ".messages"; //$NON-NLS-1$
     public static String ContextDictionaryExtension;
+    public static String filterSourceLanguage;
+    public static String filterTargetLanguage;
     public static String src_source;
     public static String src_target;
     static {
