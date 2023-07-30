@@ -24,8 +24,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.progress.IProgressService;
 
 public class UnloadSourceLangDictionaries extends AbstractHandler
 {
@@ -35,12 +40,21 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        try
-        {
-            UnloadDictionaries(event);
+        try {
+            IWorkbench wb = PlatformUI.getWorkbench();
+            IProgressService ps = wb.getProgressService();
+            ps.busyCursorWhile(new IRunnableWithProgress() {
+               @Override
+                public void run(IProgressMonitor pm) {
+                    try {
+                        UnloadDictionaries(event);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
-        catch (IOException e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
         return null;
