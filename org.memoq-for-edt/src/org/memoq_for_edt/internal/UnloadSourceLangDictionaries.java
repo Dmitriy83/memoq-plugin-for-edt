@@ -150,7 +150,7 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
             int index = match.start();
             String key = StringUtils.left(text, index);
 
-            // Split key to the words. Separetor: space or non-breaking space
+            // Split key to the words. Separator: space or non-breaking space
             String[] keyWords = key.split("\\x20|\\xa0");
 
             // Check each word (except the last one) in the key and add backslash if necessary
@@ -165,6 +165,7 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
 
             // Join words to the fixed key
             if (wasLineModified) {
+                // TODO: Save non-breaking spaces
                 text = String.join(" ", keyWords).concat(StringUtils.right(text, text.length() - index));
             }
         }

@@ -22,10 +22,10 @@ class UnloadSourceLangDictionariesTest
     {
         UnloadSourceLangDictionaries testObject = new UnloadSourceLangDictionaries();
 
-        String lineToTest = "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create user\\..Lines=Cannot create a user";
+        String lineToTest = "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ a user\\ in\\ the\\ catalog\\..Lines=Cannot create a user in the catalog";
         lineToTest = testObject.fixKeyInLine(lineToTest);
 
-        assertEquals(lineToTest, "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ user\\..Lines=Cannot create a user");
+        assertEquals(lineToTest, "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ a\\ user\\ in\\ the\\ catalog\\..Lines=Cannot create a user in the catalog");
 
         lineToTest = "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ user\\..Lines=Cannot create a user";
         lineToTest = testObject.fixKeyInLine(lineToTest);
