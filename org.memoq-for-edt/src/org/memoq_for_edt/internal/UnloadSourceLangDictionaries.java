@@ -47,7 +47,7 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
                @Override
                 public void run(IProgressMonitor pm) {
                     try {
-                        UnloadDictionaries(event);
+                        unloadDictionaries(event);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -60,7 +60,7 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
         return null;
     }
 
-    public void UnloadDictionaries(ExecutionEvent event) throws IOException
+    public void unloadDictionaries(ExecutionEvent event) throws IOException
     {
         IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
         if (selection.isEmpty())
