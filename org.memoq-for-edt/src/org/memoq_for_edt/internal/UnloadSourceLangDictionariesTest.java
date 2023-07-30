@@ -46,5 +46,10 @@ class UnloadSourceLangDictionariesTest
         lineToTest = testObject.fixKeyInLine(lineToTest);
 
         assertEquals("Synonym=Users", lineToTest);
+
+        lineToTest = "Method.ExecuteItemReplacement.Var.ErrorText.NStr.Cannot save\\ register\\ records for\\ recorder\\ \"%1\"\\ to\\ record\\ set\\ \"%2\"\\:\\n%3.Lines=Cannot save register records";
+        lineToTest = testObject.fixKeyInLine(lineToTest);
+
+        assertEquals("Method.ExecuteItemReplacement.Var.ErrorText.NStr.Cannot\\ save\\ register\\ records\\ for\\ recorder\\ \"%1\"\\ to\\ record\\ set\\ \"%2\"\\:\\n%3.Lines=Cannot save register records", lineToTest);
     }
 }

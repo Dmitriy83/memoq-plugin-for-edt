@@ -157,28 +157,17 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
         Pattern regexPattern = Pattern.compile("(?<!\\\\)\\=");
         Matcher keyMatch = regexPattern.matcher(text);
 
-        boolean wasLineModified = false;
-
         if (keyMatch.find())
         {
             int keyValueSeparatorIndex = keyMatch.start();
-            String key = StringUtils.left(text, keyValueSeparatorIndex);
-
-            // Find entries of spaces or non-breaking spaces in the key
-            regexPattern = Pattern.compile("(?<!\\\\)\\xa0|(?<!\\\\)\\x20");
-            Matcher wordsSeparatorMatch = regexPattern.matcher(key);
-            while (wordsSeparatorMatch.find()) {
-                int index = wordsSeparatorMatch.start();
-                String prevSymbol = StringUtils.mid(key, index - 1, 1);
-                if (!(prevSymbol == "\\" || prevSymbol == " " || prevSymbol == Character.toString((char)160))) {
-                    wasLineModified = true;
-                    key = StringUtils.left(key, index).concat("\\").concat(StringUtils.right(key, key.length() - index));
-                }
-            }
+            String keyInitial   = StringUtils.left(text, keyValueSeparatorIndex);
+            String keyFixed     = keyInitial
+                                    .replaceAll("(?<!(\\\\|\\xa0|\\x20))\\xa0", "\\\\".concat(Character.toString((char)160)))
+                                    .replaceAll("(?<!(\\\\|\\xa0|\\x20))\\x20", "\\\\ ");
 
             // Generate result text line with fixed key
-            if (wasLineModified) {
-                text = key.concat(StringUtils.right(text, text.length() - keyValueSeparatorIndex));
+            if (!keyInitial.equals(keyFixed)) {
+                text = keyFixed.concat(StringUtils.right(text, text.length() - keyValueSeparatorIndex));
             }
         }
 
