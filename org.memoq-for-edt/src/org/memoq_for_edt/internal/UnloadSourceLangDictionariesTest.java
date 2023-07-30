@@ -25,26 +25,26 @@ class UnloadSourceLangDictionariesTest
         String lineToTest = "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ a user\\ in\\ the\\ catalog\\..Lines=Cannot create a user in the catalog";
         lineToTest = testObject.fixKeyInLine(lineToTest);
 
-        assertEquals(lineToTest, "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ a\\ user\\ in\\ the\\ catalog\\..Lines=Cannot create a user in the catalog");
+        assertEquals("Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ a\\ user\\ in\\ the\\ catalog\\..Lines=Cannot create a user in the catalog", lineToTest);
 
         lineToTest = "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ user\\..Lines=Cannot create a user";
         lineToTest = testObject.fixKeyInLine(lineToTest);
 
-        assertEquals(lineToTest, "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ user\\..Lines=Cannot create a user");
+        assertEquals("Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\ user\\..Lines=Cannot create a user", lineToTest);
 
         lineToTest = "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\=\\ user\\..Lines=Cannot create a user";
         lineToTest = testObject.fixKeyInLine(lineToTest);
 
-        assertEquals(lineToTest, "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\=\\ user\\..Lines=Cannot create a user");
+        assertEquals("Method.CreateAdministrator.Var.ErrorText.NStr.Cannot\\ create\\=\\ user\\..Lines=Cannot create a user", lineToTest);
 
         lineToTest = "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot=";
         lineToTest = testObject.fixKeyInLine(lineToTest);
 
-        assertEquals(lineToTest, "Method.CreateAdministrator.Var.ErrorText.NStr.Cannot=");
+        assertEquals("Method.CreateAdministrator.Var.ErrorText.NStr.Cannot=", lineToTest);
 
         lineToTest = "Synonym=Users";
         lineToTest = testObject.fixKeyInLine(lineToTest);
 
-        assertEquals(lineToTest, "Synonym=Users");
+        assertEquals("Synonym=Users", lineToTest);
     }
 }

@@ -141,32 +141,30 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
     {
         // Find index of the first entry "=" in the text line (if it's not preceded by "\")
         Pattern regexPattern = Pattern.compile("(?<!\\\\)\\=");
-        Matcher match = regexPattern.matcher(text);
+        Matcher keyMatch = regexPattern.matcher(text);
 
         boolean wasLineModified = false;
 
-        if (match.find())
+        if (keyMatch.find())
         {
-            int index = match.start();
-            String key = StringUtils.left(text, index);
+            int keyValueSeparatorIndex = keyMatch.start();
+            String key = StringUtils.left(text, keyValueSeparatorIndex);
 
-            // Split key to the words. Separator: space or non-breaking space
-            String[] keyWords = key.split("\\x20|\\xa0");
-
-            // Check each word (except the last one) in the key and add backslash if necessary
-            for (int j = 0; j < keyWords.length - 1; j++)
-            {
-                if (!(keyWords[j].isEmpty() || StringUtils.right(keyWords[j], 1).equals("\\")))
-                {
+            // Find entries of spaces or non-breaking spaces in the key
+            regexPattern = Pattern.compile("(?<!\\\\)\\xa0|(?<!\\\\)\\x20");
+            Matcher wordsSeparatorMatch = regexPattern.matcher(key);
+            while (wordsSeparatorMatch.find()) {
+                int index = wordsSeparatorMatch.start();
+                String prevSymbol = StringUtils.mid(key, index - 1, 1);
+                if (!(prevSymbol == "\\" || prevSymbol == " " || prevSymbol == Character.toString((char)160))) {
                     wasLineModified = true;
-                    keyWords[j]     = keyWords[j].concat("\\");
+                    key = StringUtils.left(key, index).concat("\\").concat(StringUtils.right(key, key.length() - index));
                 }
             }
 
-            // Join words to the fixed key
+            // Generate result text line with fixed key
             if (wasLineModified) {
-                // TODO: Save non-breaking spaces
-                text = String.join(" ", keyWords).concat(StringUtils.right(text, text.length() - index));
+                text = key.concat(StringUtils.right(text, text.length() - keyValueSeparatorIndex));
             }
         }
 
