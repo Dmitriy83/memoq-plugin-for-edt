@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.commands">
+   <extension point="org.eclipse.ui.commands">
       <command
             defaultHandler="org.memoq_for_edt.internal.UnloadSourceLangDictionaries"
             id="org.memoq-for-edt.unload-source-lang-dictionaries"
             name="Extract source language files from the main project">
       </command>
    </extension>
-   <extension
-         point="org.eclipse.ui.menus">
+   <extension point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
             locationURI="popup:com._1c.g5.v8.dt.navigator.ui.navigator.popup?after=group.generate">
@@ -19,20 +17,14 @@
                style="push">
             <visibleWhen>
                <and>
-                  <with
-                        variable="selection">
+                  <with variable="selection">
                      <count
                            value="1">
                      </count>
-                     <iterate
-                           operator="and">
+                     <iterate operator="and">
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
-                        <test
-                              property="org.eclipse.core.resources.projectNature"
-                              value="com._1c.g5.v8.dt.core.V8ConfigurationNature">
-                        </test>
                      </iterate>
                   </with>
                </and>
@@ -40,5 +32,4 @@
          </command>
       </menuContribution>
    </extension>
-
 </plugin>
