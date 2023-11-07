@@ -13,6 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,6 +82,13 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
         if (!Files.exists(srcSourceDirectory))
         {
             return;
+        }
+
+        String scriptLanguage = getScriptLanguage(srcSourceDirectory);
+        if (scriptLanguage.equals("Russian")) { //$NON-NLS-1$
+            Messages.src_target = "src_en"; //$NON-NLS-1$
+            Messages.filterSourceLanguage = "_ru."; //$NON-NLS-1$
+            Messages.filterTargetLanguage = "_en."; //$NON-NLS-1$
         }
 
         String srcTargetDirectoryStr = projectLocation.append(Messages.src_target).toOSString();
@@ -172,5 +180,37 @@ public class UnloadSourceLangDictionaries extends AbstractHandler
         }
 
         return text;
+    }
+
+    private String getScriptLanguage(Path srcSourceDirectory)
+    {
+        String scriptLanguage = Messages.defaultScriptLanguage;
+
+        Path configurationFile = Path.of(srcSourceDirectory.toString().concat("\\\\Configuration\\\\Configuration.mdo")); //$NON-NLS-1$
+        if (Files.exists(configurationFile))
+        {
+            Scanner scanner;
+            try
+            {
+                scanner = new Scanner(configurationFile);
+                int index1 = -1; int index2 = -1;
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    index1 = line.indexOf("<scriptVariant>"); //$NON-NLS-1$
+                    if (index1 != -1) {
+                        index2 = line.indexOf("</scriptVariant>"); //$NON-NLS-1$
+                        if (index2 != -1) {
+                            scriptLanguage = line.substring(index1 + 15, index2);
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return scriptLanguage;
     }
 }

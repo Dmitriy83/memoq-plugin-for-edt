@@ -16,6 +16,7 @@ public class Messages extends NLS {
     public static String filterTargetLanguage;
     public static String src_source;
     public static String src_target;
+    public static String defaultScriptLanguage;
     static {
 	// initialize resource bundle
 	NLS.initializeMessages(BUNDLE_NAME, Messages.class);
